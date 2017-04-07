@@ -1,7 +1,8 @@
 const choo = require('choo')
 const html = require('choo/html')
 const app = choo()
-
+const request = require('hyperquest')
+const bl = require('bl')
 // model
 
 app.use( (state, emitter) => {
@@ -35,6 +36,33 @@ const button = (x, emit) => html`
     }>Delete me
    </button>`
 
+const inputItem = () => html`
+  <form>
+    <input type="text" placeholder="Item" name="item">  
+    <input type="text" placeholder="Quantidade" name="quantity">  
+    <input type="text" placeholder="Medida" name="measure">  
+    <input type="text" placeholder="Aberto desde" name="open_since">  
+    <input type="submit" onclick=${submit}>
+  </form>
+`
+const submit = (e) => {
+  e.preventDefault();
+  let fields = Array.from(document.querySelectorAll('form>input:not([type=submit])'))
+  let payload = fields.reduce( (acc, field) => {
+    acc[field.getAttribute('name')] = field.value
+    return acc
+  }, {})
+  payload = JSON.stringify(payload)
+  // TODO: validation
+  bl(payload).pipe(request.post(`${document.location}newItem`, {}, function (err, res) {
+    console.log(arguments)
+    if(err) {
+      console.log('ooooohhh, this is sad! Try again', err.message)
+      return
+    }
+  }))
+}
+
 const view = (state, emit) => {
   let i = 0
   return html`
@@ -52,6 +80,7 @@ const view = (state, emit) => {
         }
         )}
       </ul>
+      ${inputItem()}
     </div>
    </body>`
 }

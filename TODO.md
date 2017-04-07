@@ -1,0 +1,4 @@
+- install patchwork as a simple way to have sbot running
+- validate the form before POST
+- stream sbot messages through websocket, maybe?
+-
