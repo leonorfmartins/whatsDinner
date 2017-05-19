@@ -12,7 +12,9 @@
     "bl": "^1.2.0",
     "budo": "^9.4.7",
     "choo": "^5.1.3",
+    "pull-notify": "^0.1.1",
     "pull-stream": "^3.5.0",
+    "pull-ws": "^3.2.9",
     "request": "^2.81.0",
     "ssb-client": "^4.4.0"
   }

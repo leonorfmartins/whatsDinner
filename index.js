@@ -3,8 +3,23 @@ const html = require('choo/html')
 const app = choo()
 const request = require('hyperquest')
 const bl = require('bl')
-// model
+const ws = require('pull-ws/client')
+const pull = require('pull-stream')
 
+ws("/items", function (err, stream) {
+  if(err) throw err //handle err 
+  pull(
+      pull.count(), // we need to make sure the socket doesnt close as soon as the messages are sent
+      pull.asyncMap( (data, cb)=>{
+        setTimeout( ()=>cb(null, data), 1000);
+      }),
+      pull.map( (x)=> `${x} Hello I am the client`),
+      stream, 
+      pull.log()
+  )
+})
+
+// model
 app.use( (state, emitter) => {
   state.items = [
     {
